@@ -1,0 +1,74 @@
+.\" Process this file with
+.\" groff -man -Tascii rando.1
+.\"
+.TH rando 1 "2017-07-03" "Rando 1.0"
+.SH NAME
+rando \- generate random strings
+.SH SYNOPSIS
+.BR "rando " "[" "-a"
+.I ALPHA
+.RB "] [" "-c"
+.IR COUNT "] "
+.RB "[" "-h" "]"
+.I LENGTH
+.SH DESCRIPTION
+Generates strings of random characters of user-defined length.
+The single required parameter is a non-zero integer specifying the length of strings to generate.
+.SH OPTIONS
+.TP
+.BR \-a \ \fIALPHA\fR,\  \-\-alphabet =\fIALPHA\fR
+Customize the alphabet used to generate random strings.
+The default is:
+.IP
+.B abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+.TP
+.BR \-c \ \fICOUNT\fR,\  \-\-count =\fICOUNT\fR
+Output the given number of random strings instead of the default of
+.BR 1 .
+.TP
+.BR \-h ", " \-\-help
+Print the help screen and exit.
+.SH EXAMPLES
+.TP
+.B rando -c \fI6 32\fP
+Generate six 32-character strings using the default alphabet.
+.TP
+.B rando -a \fIabcdefghijklmnopqrstuvwxyz0123456789$?@ 32\fP
+Generate a 32-character string using a custom alphabet.
+.SH EXIT STATUS
+Zero on success, non-zero on errors.
+.SH DIAGNOSTICS
+The following diagnostics may be issued on stderr:
+.TP
+LENGTH must be provided.
+The value for the required parameter
+.I LENGTH
+was missing.
+.TP
+LENGTH is too large.
+The value for the required parameter
+.I LENGTH
+must be in the range [0, 2**32-1].
+.TP
+ALPHA must be non-zero length string.
+The value for the required argument
+.I ALPHA
+of the
+.B \-a
+option must have at least one character.
+.TP
+ALPHA characters must be printable ASCII.
+One of of the given chacters of
+.I ALPHA
+was not a 7-bit ASCII value.
+.TP
+COUNT is too large.
+The value for the required agument
+.I COUNT
+of the
+.B \-c
+option must be in the range [0, 2**32-1].
+.SH AUTHOR
+Kevin Birch <kmb at pobox dot com>
+.SH SEE ALSO
+.BR random (3)
