@@ -111,7 +111,8 @@ int main(int argc, char **argv)
 
     if(argc <= 0)
     {
-        fprintf(stderr, "rando: LENGTH must be provided.");
+        fprintf(stderr, "rando: LENGTH must be provided.\n");
+        usage();
         exit(EXIT_FAILURE);
     }
     options.length = must_atoi(*argv, "LENGTH");
