@@ -18,18 +18,22 @@ static struct option long_options[] =
     {NULL, 0, NULL, 0}
 };
 
+static void banner(void)
+{
+    fprintf(stdout, "Generate random strings.\n");
+}
+
 static void usage(void)
 {
-    printf("Generate random strings.\n"
-           "\n"
-           "Usage:\n"
-           "  rando [options] LENGTH\n"
-           "  rando -h | --help\n"
-           "\n"
-           "Options:\n"
-           "  -h --help                  Show this screen.\n"
-           "  -a ALPHA --alphabet=ALPHA  Use ALPHA as the output alphabet. [default: lower, upper, digit]\n"
-           "  -c COUNT --count=COUNT     Print COUNT random strings. [default: 1]\n");
+    fprintf(stdout, "\n"
+            "Usage:\n"
+            "  rando [options] LENGTH\n"
+            "  rando -h | --help\n"
+            "\n"
+            "Options:\n"
+            "  -h --help                  Show this screen.\n"
+            "  -a ALPHA --alphabet=ALPHA  Use ALPHA as the output alphabet. [default: lower, upper, digit]\n"
+            "  -c COUNT --count=COUNT     Print COUNT random strings. [default: 1]\n");
 }
 
 static inline unsigned long must_atoi(const char *restrict str, const char *restrict name)
@@ -94,9 +98,12 @@ int main(int argc, char **argv)
                 break;
             }
             case 'h':
-            default:
+                banner();
                 usage();
                 exit(EXIT_SUCCESS);
+            default:
+                usage();
+                exit(EXIT_FAILURE);
         }
     }
     argc -= optind;
@@ -104,7 +111,8 @@ int main(int argc, char **argv)
 
     if(argc <= 0)
     {
-        fprintf(stderr, "rando: LENGTH must be provided.");
+        fprintf(stderr, "rando: LENGTH must be provided.\n");
+        usage();
         exit(EXIT_FAILURE);
     }
     options.length = must_atoi(*argv, "LENGTH");
