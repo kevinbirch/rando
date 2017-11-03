@@ -98,9 +98,12 @@ int main(int argc, char **argv)
                 break;
             }
             case 'h':
-            default:
+                banner();
                 usage();
                 exit(EXIT_SUCCESS);
+            default:
+                usage();
+                exit(EXIT_FAILURE);
         }
     }
     argc -= optind;
