@@ -55,6 +55,26 @@ static inline unsigned long must_atoi(const char *restrict str, const char *rest
     return result;
 }
 
+static inline char *must_ascii(char *option)
+{
+    size_t alpha_len = strlen(option);
+    if(alpha_len == 0)
+    {
+        fprintf(stderr, "rando: ALPHA must be a non-zero length string.\n");
+        exit(EXIT_FAILURE);
+    }
+    for(size_t i = 0; i < alpha_len; i++)
+    {
+        if(isprint(option[i]) == 0)
+        {
+            fprintf(stderr, "rando: ALPHA characters must be printable ASCII.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    return option;
+}
+
 int main(int argc, char **argv)
 {
     Options options = {.count=1, .alphabet=DEFAULT_ALPHABET};
@@ -65,21 +85,7 @@ int main(int argc, char **argv)
         {
             case 'a':
             {
-                size_t alpha_len = strlen(optarg);
-                if(alpha_len == 0)
-                {
-                    fprintf(stderr, "rando: ALPHA must be a non-zero length string.\n");
-                    exit(EXIT_FAILURE);
-                }
-                for(size_t i = 0; i < alpha_len; i++)
-                {
-                    if(isprint(optarg[i]) == 0)
-                    {
-                        fprintf(stderr, "rando: ALPHA characters must be printable ASCII.\n");
-                        exit(EXIT_FAILURE);
-                    }
-                }
-                options.alphabet = optarg;
+                options.alphabet = must_ascii(optarg);
                 break;
             }
             case 'c':
