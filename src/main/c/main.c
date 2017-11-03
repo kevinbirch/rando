@@ -32,7 +32,7 @@ static void usage(void)
            "  -c COUNT --count=COUNT     Print COUNT random strings. [default: 1]\n");
 }
 
-static unsigned long must_atoi(const char *restrict str, const char *restrict name)
+static inline unsigned long must_atoi(const char *restrict str, const char *restrict name)
 {
     errno = 0;
     unsigned long result = strtoul(str, NULL, 10);
