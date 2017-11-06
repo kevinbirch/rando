@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,17 +43,12 @@ static inline unsigned long must_atoi(const char *restrict str, const char *rest
     unsigned long result = strtoul(str, NULL, 10);
     if(errno == ERANGE)
     {
-        fprintf(stderr, "rando: %s is too large.\n", name);
-        exit(EXIT_FAILURE);
-    }
-    if(errno != 0)
-    {
-        perror("rando");
+        fprintf(stderr, "rando: %s is too large\n", name);
         exit(EXIT_FAILURE);
     }
     if(result == 0)
     {
-        fprintf(stderr, "rando: %s must be an integer.\n", name);
+        fprintf(stderr, "rando: %s must be an integer\n", name);
         exit(EXIT_FAILURE);
     }
 
@@ -64,14 +60,14 @@ static inline char *must_ascii(char *option)
     size_t alpha_len = strlen(option);
     if(alpha_len == 0)
     {
-        fprintf(stderr, "rando: ALPHA must be a non-zero length string.\n");
+        fprintf(stderr, "rando: ALPHA must be a non-zero length string\n");
         exit(EXIT_FAILURE);
     }
     for(size_t i = 0; i < alpha_len; i++)
     {
         if(isprint(option[i]) == 0)
         {
-            fprintf(stderr, "rando: ALPHA characters must be printable ASCII.\n");
+            fprintf(stderr, "rando: ALPHA characters must be printable ASCII\n");
             exit(EXIT_FAILURE);
         }
     }
@@ -81,12 +77,24 @@ static inline char *must_ascii(char *option)
 
 int main(int argc, char **argv)
 {
+    opterr = 0;
     Options options = {.count=1, .alphabet=DEFAULT_ALPHABET};
-    int ch;
-    while((ch = getopt_long(argc, argv, "a:c:h", long_options, NULL)) != -1)
+    bool done = false;
+    while(!done)
     {
-        switch(ch)
+        switch(getopt_long(argc, argv, ":a:c:h", long_options, NULL))
         {
+            case -1:
+                done = true;
+                break;
+            case ':':
+                fprintf(stderr, "rando: option -%c requires an argument\n", optopt);
+                usage();
+                exit(EXIT_FAILURE);
+            case '?':
+                fprintf(stderr, "rando: unknown option -%c\n", optopt);
+                usage();
+                exit(EXIT_FAILURE);
             case 'a':
             {
                 options.alphabet = must_ascii(optarg);
@@ -111,7 +119,7 @@ int main(int argc, char **argv)
 
     if(argc <= 0)
     {
-        fprintf(stderr, "rando: LENGTH must be provided.\n");
+        fprintf(stderr, "rando: LENGTH must be provided\n");
         usage();
         exit(EXIT_FAILURE);
     }
